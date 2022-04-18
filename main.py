@@ -13,25 +13,15 @@ newsapi = NewsApiClient(api_key=keyapi)
 auth = vk_api.VkApi(token = token)
 longpoll = VkLongPoll(auth)
 
-def getPresiden():
-    url = "https://newsapi.org/v2/everything?q=Путин&from=2022-02-26&to=2022-02-26&sortBy=popularity&apiKey="+keyapi
-    news = requests.get(url).json()
-    articles = news["articles"]
+#Осторожно, ссылка может не работать, из-за некоректной даты
+urlWar = "https://newsapi.org/v2/everything?q=Война&from=2022-04-18&to=2022-04-18&sortBy=popularity&apiKey="+keyapi
 
-    my_articles = []
-    my_news = " "
+url = "https://newsapi.org/v2/top-headlines?country=ru&apiKey="+keyapi
 
-    for article in articles:
-        my_articles.append(article["title"])
 
-    for i in range(5):
-        my_news = my_news + "*) " + my_articles[i] + "\n"
 
-    return my_news
-
-def getNews():
-    url = "https://newsapi.org/v2/top-headlines?country=ru&apiKey="+keyapi
-    news = requests.get(url).json()
+def getNews(adress):
+    news = requests.get(adress).json()
     articles = news["articles"]
 
     my_articles = []
@@ -57,9 +47,9 @@ for event in longpoll.listen():
         sender = event.user_id
 
         if res_mess == "новости" or res_mess == "Новости":
-            write_mess(sender, getNews())
-        elif res_mess == "путин" or res_mess == "Путин":
-            write_mess(sender, getPresiden())
+            write_mess(sender, getNews(url))
+        elif res_mess == "война" or res_mess == "Война":
+            write_mess(sender, getNews(urlWar))
         else:
             write_mess(sender, "Я глупый!")
 
